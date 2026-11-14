@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Header } from '@nestjs/common';
 
 interface HealthStatus {
   status: 'ok';
@@ -7,6 +7,7 @@ interface HealthStatus {
 @Controller('health')
 export class HealthController {
   @Get()
+  @Header('Cache-Control', 'no-store')
   getHealth(): HealthStatus {
     return { status: 'ok' };
   }
