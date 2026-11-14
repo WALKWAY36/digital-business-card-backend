@@ -1,5 +1,7 @@
 docs
 
+/dist
+
 packages/*/package-lock.json
 sample/**/package-lock.json
 
