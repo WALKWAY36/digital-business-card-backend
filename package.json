@@ -26,13 +26,18 @@
     "profile:preview": "npm run build && node dist/scripts/preview-profile.js"
   },
   "dependencies": {
+    "@apollo/server": "^5.5.2",
+    "@as-integrations/express5": "^1.1.2",
+    "@nestjs/apollo": "^13.4.5",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
+    "@nestjs/graphql": "^13.4.5",
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
     "dotenv": "^18.0.10",
+    "graphql": "^16.15.0",
     "nestjs-pino": "^5.3.1",
     "pg": "^8.23.1",
     "pino": "^10.4.0",
