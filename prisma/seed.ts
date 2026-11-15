@@ -2,17 +2,27 @@ import 'dotenv/config';
 import pino from 'pino';
 import { z } from 'zod';
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '../src/generated/prisma/client';
+import { Prisma, PrismaClient } from '../src/generated/prisma/client';
 import { seedData } from './seed-data';
 import { seedSchema } from './seed.schema';
-import { createDatabaseUrl } from '../src/config/database.config';
+import { createMigrationDatabaseUrl } from '../src/config/database.config';
 
 const logger = pino({ name: 'database-seed' });
 
 async function main(): Promise<void> {
   const data = seedSchema.parse(seedData);
 
-  const connectionString = createDatabaseUrl(process.env);
+  const connectionString = createMigrationDatabaseUrl(process.env);
+  const { SEED_TRANSACTION_TIMEOUT_MS: transactionTimeoutMs } = z
+    .object({
+      SEED_TRANSACTION_TIMEOUT_MS: z.coerce
+        .number()
+        .int()
+        .min(1000)
+        .max(300000)
+        .default(60000),
+    })
+    .parse(process.env);
 
   const prisma = new PrismaClient({
     adapter: new PrismaPg({
@@ -118,7 +128,7 @@ async function main(): Promise<void> {
           },
         });
       },
-      { maxWait: 5000, timeout: 10000 },
+      { maxWait: 5000, timeout: transactionTimeoutMs },
     );
 
     logger.info({ profileId: data.profile.id }, 'Seed completed');
@@ -137,6 +147,16 @@ main().catch((error: unknown) => {
         })),
       },
       'Seed validation failed',
+    );
+  } else if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    logger.error(
+      {
+        errorType: error.name,
+        code: error.code,
+        clientVersion: error.clientVersion,
+        message: error.message,
+      },
+      'Seed failed; database changes were not confirmed',
     );
   } else {
     logger.error(
