@@ -1,14 +1,13 @@
 import { Controller, Get, Header } from '@nestjs/common';
-
-interface HealthStatus {
-  status: 'ok';
-}
+import { HealthService } from './health.service';
 
 @Controller('health')
 export class HealthController {
+  constructor(private readonly healthService: HealthService) {}
+
   @Get()
   @Header('Cache-Control', 'no-store')
-  getHealth(): HealthStatus {
-    return { status: 'ok' };
+  getHealth() {
+    return this.healthService.check();
   }
 }

@@ -1,6 +1,7 @@
 docs
 
 /dist
+/src/generated/prisma/
 
 packages/*/package-lock.json
 sample/**/package-lock.json

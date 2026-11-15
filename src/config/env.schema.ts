@@ -5,6 +5,12 @@ const envSchema = z.object({
   HOST: z.string().trim().min(1),
   PORT: z.coerce.number().int().min(1).max(65535),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
+  DATABASE_URL: z
+    .url()
+    .refine(
+      (value) => ['postgresql:', 'postgres:'].includes(new URL(value).protocol),
+      { message: 'DATABASE_URL must use postgresql:// or postgres://' },
+    ),
 });
 
 export type Environment = z.infer<typeof envSchema>;
