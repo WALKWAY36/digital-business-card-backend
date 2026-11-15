@@ -23,6 +23,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:generate": "prisma generate",
     "db:seed": "prisma db seed",
+    "db:migrate:deploy": "prisma migrate deploy",
     "profile:preview": "npm run build && node dist/scripts/preview-profile.js"
   },
   "dependencies": {
