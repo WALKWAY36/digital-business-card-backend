@@ -6,6 +6,42 @@
 
 Приложение предоставляет Apollo Sandbox (GraphQL Playground), через которое можно получить информацию о специалисте, опыте работы, навыках и проектах.
 
+## Пример полного запроса graphql
+
+```gql
+query GetProfile {
+  profile {
+    name
+    description
+    links {
+      label
+      url
+    }
+    skills {
+      name
+    }
+    experiences {
+      company
+      position
+      startDate
+      endDate
+      achievements
+    }
+    projects {
+      name
+      url
+      repositoryUrl
+    }
+    educations {
+      name
+      degree
+      startDate
+      endDate
+    }
+  }
+}
+```
+
 ## План реализации
 
 1) Настроить окружение: npm, конфигурацию typescript, линтер, форматтер,  запуск сервера.
