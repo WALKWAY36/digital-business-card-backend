@@ -5,19 +5,14 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../src/generated/prisma/client';
 import { seedData } from './seed-data';
 import { seedSchema } from './seed.schema';
+import { createDatabaseUrl } from '../src/config/database.config';
 
 const logger = pino({ name: 'database-seed' });
 
 async function main(): Promise<void> {
   const data = seedSchema.parse(seedData);
 
-  const connectionString = z
-    .url()
-    .refine(
-      (value) => ['postgresql:', 'postgres:'].includes(new URL(value).protocol),
-      { message: 'Invalid database URL protocol' },
-    )
-    .parse(process.env.DATABASE_URL);
+  const connectionString = createDatabaseUrl(process.env);
 
   const prisma = new PrismaClient({
     adapter: new PrismaPg({
