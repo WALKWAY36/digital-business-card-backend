@@ -1,27 +1,25 @@
 import { z } from 'zod';
-import {
-  createDatabaseUrl,
-  databaseEnvironmentSchema,
-} from './database.config';
+import { createDatabaseUrl, databaseUrlSchema } from './database.config';
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']),
   HOST: z.string().trim().min(1),
   PORT: z.coerce.number().int().min(1).max(65535),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-  ...databaseEnvironmentSchema.shape,
+  DATABASE_URL: databaseUrlSchema,
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().min(1000).max(3600000),
   RATE_LIMIT_MAX: z.coerce.number().int().min(1).max(10000),
 });
 
-export type Environment = z.infer<typeof envSchema> & {
-  DATABASE_URL: string;
-};
+export type Environment = z.infer<typeof envSchema>;
 
 export function validateEnvironment(
   config: Record<string, unknown>,
 ): Environment {
-  const result = envSchema.safeParse(config);
+  const result = envSchema.safeParse({
+    ...config,
+    DATABASE_URL: createDatabaseUrl(config),
+  });
 
   if (!result.success) {
     const details = result.error.issues

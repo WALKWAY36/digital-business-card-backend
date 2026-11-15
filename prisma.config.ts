@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { defineConfig } from 'prisma/config';
-import { createDatabaseUrl } from './src/config/database.config';
+import { createMigrationDatabaseUrl } from './src/config/database.config';
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
@@ -9,6 +9,6 @@ export default defineConfig({
     seed: 'tsx prisma/seed.ts',
   },
   datasource: {
-    url: createDatabaseUrl(process.env),
+    url: createMigrationDatabaseUrl(process.env),
   },
 });
