@@ -10,6 +10,8 @@ const envSchema = z.object({
   PORT: z.coerce.number().int().min(1).max(65535),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
   ...databaseEnvironmentSchema.shape,
+  RATE_LIMIT_WINDOW_MS: z.coerce.number().int().min(1000).max(3600000),
+  RATE_LIMIT_MAX: z.coerce.number().int().min(1).max(10000),
 });
 
 export type Environment = z.infer<typeof envSchema> & {

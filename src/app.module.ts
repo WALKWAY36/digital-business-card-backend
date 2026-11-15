@@ -10,6 +10,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
 import type { ApolloDriverConfig } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { RateLimitModule } from './rate-limit/rate-limit.module';
 
 @Module({
   imports: [
@@ -22,6 +23,10 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
       graphiql: false,
       introspection: true,
       includeStacktraceInErrorResponses: false,
+      context: ({ req, res }: { req: Request; res: Response }) => ({
+        req,
+        res,
+      }),
       plugins: [
         ApolloServerPluginLandingPageLocalDefault({
           embed: true,
@@ -33,6 +38,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin
       envFilePath: '.env',
       validate: validateEnvironment,
     }),
+    RateLimitModule,
     LoggingModule,
     HealthModule,
     ProfileModule,
