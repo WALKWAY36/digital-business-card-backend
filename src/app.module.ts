@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { validateEnvironment } from './config/env.schema';
 import { HealthModule } from './health/health.module';
 import { LoggingModule } from './logger/logger.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { LoggingModule } from './logger/logger.module';
     }),
     LoggingModule,
     HealthModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
